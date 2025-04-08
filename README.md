@@ -1,2 +1,2 @@
-# Prueba-T-cnica-Leonardo-Quinones-
+# Prueba-Técnica-Leonardo-Quinones-
 El Juego de la Ruleta
