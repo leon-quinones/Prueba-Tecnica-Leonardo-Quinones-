@@ -40,7 +40,8 @@
 import { mapState, mapMutations, mapGetters } from 'vuex'
 export default {
   computed: {
-    ...mapState(['player', 'credits']),
+    ...mapState(['player', 'credits', 'appDomain']),
+    ...mapGetters(['getAppBaseUrl'])   
   },  
   data() {
     return {
@@ -71,7 +72,7 @@ export default {
       if (this.username && this.amount > 0) {
          this.username = this.$ToLowerUsername(this.username);
          await fetch(
-          'https://localhost:7004/api/v1.0/Players/SignUp',
+          `${this.getAppBaseUrl}/Players/SignUp`,
           {
             method: "POST",
             body: JSON.stringify({

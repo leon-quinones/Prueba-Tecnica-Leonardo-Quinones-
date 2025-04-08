@@ -13,10 +13,11 @@ const wagerStore = createStore({
         playerAccountBalance: 0, 
         playerTotalWinnings: 0,
         playedGames: Array(),
-        playerWinnings: Array()
+        playerWinnings: Array(),
+        appDomain: import.meta.env.VITE_ROULETTE_DOMAIN
 
     };
-  },
+  },    
   mutations: {
 
     setUsername(state, data) {
@@ -94,6 +95,9 @@ const wagerStore = createStore({
     getPlayerBalance(state) {
         return state.playerAccountBalance;
     },      
+    getAppBaseUrl(state) {
+        return state.appDomain;
+    }
   }
 });
 

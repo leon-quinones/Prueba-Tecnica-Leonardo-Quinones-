@@ -41,7 +41,7 @@
       };
     },
     computed: {
-        ...mapState(['player', 'wagerAmount', 'playerAccountBalance', 'wagerBetType']),
+        ...mapState(['player', 'wagerAmount', 'playerAccountBalance', 'wagerBetType',]),
         ...mapGetters(['getUsername', 'getWagerAmount', 'getPlayerBalance', 'getWagerBetType']),
 
       isValid() {        

@@ -18,13 +18,13 @@ import { mapState, mapGetters } from 'vuex'
 export default {
 
   computed: {
-    ...mapState(['player', 'sessionCredits', 'playerAccountBalance', 'playerTotalWinnings', 'playedGames']),
-    ...mapGetters(['getUsername','getSessionCredits', 'getPlayerBalance','getPlayerTotalWinnings', 'getPlayedGames'])
+    ...mapState(['player', 'sessionCredits', 'playerAccountBalance', 'playerTotalWinnings', 'playedGames', 'appDomain']),
+    ...mapGetters(['getUsername','getSessionCredits', 'getPlayerBalance','getPlayerTotalWinnings', 'getPlayedGames', 'getAppBaseUrl'])
     }, 
   methods: {
     ...mapMutations(['setSessionCredits']),
     async saveCredits() {
-      await fetch(`https://localhost:7004/api/v1.0/Players/${this.getUsername}`,
+      await fetch(`${this.getAppBaseUrl}/Players/${this.getUsername}`,
         {
           method: 'GET',
           headers: {
@@ -53,7 +53,7 @@ export default {
     },
     async updateGames() {
 
-      await fetch(`https://localhost:7004/api/v1.0/Wagers`,
+      await fetch(`${this.getAppBaseUrl}/Wagers`,
         {
           method: 'PATCH',
           body: JSON.stringify({
@@ -83,7 +83,7 @@ export default {
       });      
     },
     async addSessionCredits() {
-      await fetch(`https://localhost:7004/api/v1.0/Players/${this.getUsername}`,
+      await fetch(`${this.getAppBaseUrl}/Players/${this.getUsername}`,
         {
           method: 'POST',
           body: JSON.stringify({

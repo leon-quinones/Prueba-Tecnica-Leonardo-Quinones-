@@ -13,7 +13,6 @@
     </div>
     <div >
       <RouletteTable/>      
-      <p>{{validateWager()}}</p>
     </div>
     <div v-if="validateWager()">
       <h2>Esta es tu apuesta!:</h2>
@@ -58,10 +57,10 @@
   export default {
     computed: {
     ...mapState(['player', 'sessionCredits', 'wagerBetType', 'wagerNumber', 'wagerColor', 'playerWinnings', 'playerAccountBalance'
-      ,'playedGames'
+      ,'playedGames', 'appDomain'
     ]),
     ...mapGetters(['getUsername', 'getSessionCredits', 'getWagerBetType', 'getWagerAmount', 'getWagerNumber', 'getWagerColor', 'getPlayerBalance'
-      ,'getPlayedGames'
+      ,'getPlayedGames', 'getAppBaseUrl'
     ])
     },  
     components: {
@@ -97,7 +96,7 @@
       ]),
 
       async loadUserData() {
-        await fetch(`https://localhost:7004/api/v1.0/Players/${this.getUsername}`,
+        await fetch(`${this.getAppBaseUrl}/Players/${this.getUsername}`,
             {
               method: 'GET',
               headers: {
@@ -132,7 +131,7 @@
         
       },
       async startGame() {        
-        await fetch('https://localhost:7004/api/v1.0/Games',
+        await fetch(`${this.getAppBaseUrl}/Games`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -180,7 +179,7 @@
           player: this.getUsername
         }).toString();
         await fetch( 
-          `https://localhost:7004/api/v1.0/Games/${this.playedGames[this.playedGames.length-1]}/Wagers?${params}`  
+          `${this.getAppBaseUrl}/Games/${this.playedGames[this.playedGames.length-1]}/Wagers?${params}`  
         ,
           {
             method: "GET",    
