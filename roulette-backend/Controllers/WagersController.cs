@@ -45,11 +45,8 @@ namespace Roulette.App.Controllers
                     }
                 }
                 await _databaseContext.SaveChangesAsync();
-                var token = new PlayerSession
-                {
-                    Token = Guid.NewGuid().ToString(),
-                    Username = status.Username,
-                };
+                var token = _sessionContext.GenerateSessionToken(status.Username);
+                if (token == null) { return StatusCode(503, "Service Unavailable"); }
                 if (await _sessionContext.CreateSession(token) != true) { return StatusCode(503, "Service Unavailable"); }
                 return Ok(new
                 {

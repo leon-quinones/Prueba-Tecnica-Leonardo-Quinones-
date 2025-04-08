@@ -56,6 +56,24 @@ namespace Roulette.App.Migrations
                     b.ToTable("Players");
                 });
 
+            modelBuilder.Entity("Roulette.App.Model.PlayerSession", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActiveSessions");
+                });
+
             modelBuilder.Entity("Roulette.App.Model.Result", b =>
                 {
                     b.Property<Guid>("Id")

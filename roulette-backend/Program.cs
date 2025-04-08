@@ -28,7 +28,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<SessionDatabaseConfig>(builder.Configuration.GetSection("SessionDatabase"));
-builder.Services.AddSingleton<ISessionDatabase, SessionDatabase>();
+builder.Services.AddScoped<ISessionDatabase, SessionService>();
 var connectionString = $"Host={builder.Configuration.GetSection("GameDatabase:Host").Value};" +
         $"Database={builder.Configuration.GetSection("GameDatabase:Database").Value};" +
         $"Port={builder.Configuration.GetSection("GameDatabase:Port").Value};" +
@@ -79,6 +79,4 @@ app.UseCors(CORSPolicyName);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-(app.Services.GetService<ISessionDatabase>()).CreateConnection();
 app.Run();

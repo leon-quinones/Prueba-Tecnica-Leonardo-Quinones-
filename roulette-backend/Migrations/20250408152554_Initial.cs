@@ -6,11 +6,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Roulette.App.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ActiveSessions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Token = table.Column<string>(type: "text", nullable: false),
+                    Username = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActiveSessions", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "GameResults",
                 columns: table => new
@@ -116,6 +129,9 @@ namespace Roulette.App.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ActiveSessions");
+
             migrationBuilder.DropTable(
                 name: "Wagers");
 

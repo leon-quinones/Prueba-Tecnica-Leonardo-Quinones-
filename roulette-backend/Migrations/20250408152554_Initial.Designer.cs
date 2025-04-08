@@ -12,8 +12,8 @@ using Roulette.App.Model.Database;
 namespace Roulette.App.Migrations
 {
     [DbContext(typeof(RouletteDbContext))]
-    [Migration("20250404204235_initial")]
-    partial class initial
+    [Migration("20250408152554_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,6 +57,24 @@ namespace Roulette.App.Migrations
                     b.HasKey("Username");
 
                     b.ToTable("Players");
+                });
+
+            modelBuilder.Entity("Roulette.App.Model.PlayerSession", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActiveSessions");
                 });
 
             modelBuilder.Entity("Roulette.App.Model.Result", b =>

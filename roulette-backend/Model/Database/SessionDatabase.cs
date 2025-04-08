@@ -143,5 +143,27 @@ namespace Roulette.App.Model.Database
                 return null;
             }
         }
+        public PlayerSession? GenerateSessionToken(string username)
+        {
+            try
+            {
+                var tokenValue = Guid.NewGuid().ToString();
+                var token = new PlayerSession
+                {
+                    Id = $"{username}/{tokenValue}",
+                    Token = tokenValue,
+                    Username = username,
+                };
+                return token;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+
+            }
+        }
+
+
     }
 }
