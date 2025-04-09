@@ -94,9 +94,9 @@ Para ejecutar **El Juego de la Ruleta** en tu máquina local, sigue estos pasos:
       npm install
       npm run build
    ```
-   Finalizado este proceso, copia la carpeta dist que se ha generado en el directorio X:\inetpub\wwwroot del IIS. Posterior a esto, deberás crear un sitio web desde el Administrador del IIS apuntando a la ruta X:\inetpub\wwwroot\dist, o la carpeta por defecto que estes usando para los sitios alojados en IIS. \
-   ![image](https://github.com/user-attachments/assets/97f08c7a-fcbd-48b5-a916-663de6f913ed) \
+   Finalizado este proceso, copia la carpeta dist, la cual se ha generado en la carpeta ./roulette-frontend, en el directorio X:\inetpub\wwwroot del IIS. Posterior a esto, deberás crear un sitio web desde el Administrador del IIS apuntando a la ruta X:\inetpub\wwwroot\dist, o la carpeta por defecto que estes usando para los sitios alojados en IIS. \
    Debes crear el sitio web para el frontend siguiendo los mismos pasos dados anteriormente para el proyecto de backend. \
+   ![image](https://github.com/user-attachments/assets/97f08c7a-fcbd-48b5-a916-663de6f913ed) \
    Ahora debe instalar IIS UrlRewrite (https://www.iis.net/downloads/microsoft/url-rewrite) y reiniciar tu servidor IIS. Este paquete es requerido de acuerdo con las especificaciones de Vue.
    Finalmente, dentro de la carpeta X:\inetpub\wwwroot\dist debes crear un archivo web.config de acuerdo con las instrucciones de vue:
   ```Go
