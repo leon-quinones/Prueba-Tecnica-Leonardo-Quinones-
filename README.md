@@ -11,7 +11,7 @@
 
 ## 🚀 Características
 
-- **🎯 Seguridad**: Manejo de sesión de usuario utilizando un token de único uso. Este fue implementado utilizando un custom Authentication Scheme. Endpoints de la API protegidos mediante política de autorización. El sistema garantiza que un solo cliente pueda acceder al juego (solo una pestaña/ventana de navegador)
+- **🎯 Seguridad**: Manejo de sesión de usuario utilizando un token de único uso. Este fue implementado utilizando un custom Authentication Scheme. Endpoints de la API protegidos mediante política de autorización. El sistema garantiza que dos clientes no puedan utilizar la misma cuenta de forma simultánea (solo una pestaña/ventana de navegador puede acceder a una cuenta)
 - **💸 Apuestas**: Se maneja el balance en la cuenta del usuario utilizando un esquema de transacciones, cada juego apostado representa una transacción que se puede sumar o no a los créditos en la cuenta del usuario.
 - **🎉 Implementación de principios SOLID**: Se desarrollan dos variantes del backend: uno que utiliza REDIS como base de datos para las sesiones activas (variante 0.1a) y otra que utiliza PostgreSQL + EF (variante 0.1b). Se realiza el intercambio de bases de datos utilizando la interfaz ISessionDatabase.
 
@@ -27,7 +27,7 @@
 
 Para ejecutar **El Juego de la Ruleta** en tu máquina local, sigue estos pasos:
 
-1. **Clona el repositorio**:
+1. **Clona el repositorio**: o descarga el zip compromido
    ```bash
    git clone https://github.com/leon-quinones/Prueba-Tecnica-Leonardo-Quinones-.git
 2. **Estructura del proyecto**
@@ -38,17 +38,17 @@ Para ejecutar **El Juego de la Ruleta** en tu máquina local, sigue estos pasos:
    ```bash
    dotnet publish -c Release
    ```
-   Finalizado el paso anterior, deberas alojar la carpeta ./bin/Release/net8.0/publish en el IIS copiandola a la carpeta pública de sitios web por defecto que generalmente tiene dirección X:\inetpub\wwwroot\dist, donde X es el identificador del disco donde esta alojado el IIS. \
+   Finalizado el paso anterior, deberás alojar la carpeta ./bin/Release/net8.0/publish en el IIS copiándola a la carpeta pública de sitios web por defecto, generalmente se encuentra en X:\inetpub\wwwroot\dist, donde X es el identificador del disco donde esta alojado el IIS. \
    Luego deberás crear dos elementos: Grupo de aplicaciones y un sitio web. \
-   Para crear el grupo de aplicaciones irás al administrador del IIS en la parte de conexiones, seleccionas Grupo de aplicaciones, das click derecho y seleccionas crear un nuevo grupo de aplicaciones. Aparecerá el siguiente cuadro de diálogo: \
+   Para crear el grupo de aplicaciones irás al administrador del IIS y en la parte de conexiones, seleccionas Grupo de aplicaciones, das click derecho sobre este y seleccionas la opción crear un nuevo grupo de aplicaciones. Aparecerá el siguiente cuadro de diálogo: \
    ![image](https://github.com/user-attachments/assets/fa600995-bb77-4ec0-80c8-20b7dfe5e3ee) \
-   Importante seleccionar Sin código no administrado. \
-   Luego en conexiones nuevamente y seleccionando sitios, con click derecho desplegarás el menú que tiene la opción agregar sitio web: \
+   **Importante seleccionar Sin código no administrado.** \
+   Luego vuelve a la sección de conexiones, seleccionamos sitios, y dando click derecho sobre este, se desplegará el menú que tiene la opción agregar sitio web: \
    ![image](https://github.com/user-attachments/assets/d90ec1bb-d706-4b84-ab37-b030e1af03f0) \
-   Es importante activar la opción Https ya que la API require de esta conexión para servir la información. Asegurate de seleccionar un certificado SSL válido.
+   Es importante activar la opción Https ya que la API require de este protocolo para servir la información. Asegurate de seleccionar un certificado SSL válido o puedes usar el certificado para desarrollo de IIS que se encuentra allí.
 
    _Posterior a la creación del sitio web, se deberán crear las siguientes variables de entorno_:
-   Para esto debes entrar en el administrador del IIS, seleccionar el  sitio web que creaste e ir a Editor de configuración que aparece en el panel de la derecha. En la sección que se despliega debes configurar la siguiente sección (parte superior) y campo "de" de la siguiente manera: \
+   Para esto debes entrar en el administrador del IIS, seleccionar el  sitio web que creaste e ir a Editor de configuración, esta opción aparece en el panel de la derecha. En el formulario que aparece debes configurar la siguiente sección (parte superior) y campo "de" de la siguiente manera: \
    ![image](https://github.com/user-attachments/assets/46acdfff-d2cb-4b50-ad88-633a695fc1ac) \
    Ahora en la opción EnvironmentVariables dar al pequeño botón que se encuentra en la derecha y deberás agregar las siguientes variables de entorno:   
    _Variable 0.1b.x - PostgreSQL como base de dato de sesiones activas_
@@ -83,19 +83,21 @@ Para ejecutar **El Juego de la Ruleta** en tu máquina local, sigue estos pasos:
 
 5. **Instalación frontend**
    Esta guía se basa en las instrucciones de Vue (https://router.vuejs.org/guide/essentials/history-mode.html#Internet-Information-Services-IIS-)
-   En la carpeta roulette-frontend deberás construir los archivos mediante el siguiente comando:
+   Ingresa a la carpeta ./roulette-frontend y crea un archivo .env con la siguiente variable de entorno:"
+   ```Go
+      VITE_ROULETTE_DOMAIN = "url to roulette-backend provided by your IIS (i.e https://localhost:443/api/v1.0, where 1.0 is the version defined in your backend through Major and Minor variables) 
+   ```
+   En el servidor IIS también  se puede adicionar siguiendo el procedimiento explicado en la sección de backend:   
+
+   Estando en la carpeta roulette-frontend deberás construir los archivos mediante el siguiente comando:
    ```bash
       npm install
       npm run build
    ```
-   Deberas copiar la carpeta dist que se ha generado luego de la construcción en el directorio X:\inetpub\wwwroot del IIS. Deberás crear un sitio web desde el Administrador del IIS apuntando a la ruta X:\inetpub\wwwroot\dist, o la carpeta por defecto que estes usando para los sitios alojados en IIS. \
-![image](https://github.com/user-attachments/assets/97f08c7a-fcbd-48b5-a916-663de6f913ed) \
+   Finalizado este proceso, copia la carpeta dist que se ha generado en el directorio X:\inetpub\wwwroot del IIS. Posterior a esto, deberás crear un sitio web desde el Administrador del IIS apuntando a la ruta X:\inetpub\wwwroot\dist, o la carpeta por defecto que estes usando para los sitios alojados en IIS. \
+   ![image](https://github.com/user-attachments/assets/97f08c7a-fcbd-48b5-a916-663de6f913ed) \
    Debes crear el sitio web para el frontend siguiendo los mismos pasos dados anteriormente para el proyecto de backend. \
-   Ahora debe instalar IIS UrlRewrite (https://www.iis.net/downloads/microsoft/url-rewrite) y reiniciar tu servidor IIS.   
-   En el servidor IIS deberás también adicionar la siguiente variable de entorno:
-   ```Go
-      VITE_ROULETTE_DOMAIN = "url to roulette-backend provided by your IIS (i.e https://localhost:443/api/v1.0, where 1.0 is the version defined in your backend through Major and Minor variables) 
-   ```
+   Ahora debe instalar IIS UrlRewrite (https://www.iis.net/downloads/microsoft/url-rewrite) y reiniciar tu servidor IIS. Este paquete es requerido de acuerdo con las especificaciones de Vue.
    Finalmente, dentro de la carpeta X:\inetpub\wwwroot\dist debes crear un archivo web.config de acuerdo con las instrucciones de vue:
   ```Go
   <?xml version="1.0" encoding="UTF-8"?>
