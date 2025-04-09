@@ -21,7 +21,7 @@
 2. Tener instalado Vue (https://vuejs.org/guide/quick-start.html)
 3. Tener instalado Bootstrap (npm install bootstrap@5.3.5)
 4. Tener una instancia postgreSQL > v15 funcionando (https://www.postgresql.org/download/windows/)
-5. Ejecutar el script SQL db.sql que encontrarás en el proyecto backend para cargar las tablas del modelo a la instancia postgreSQL
+5. Ejecutar el script SQL db.sql que encontrarás en la carpeta raíz del proyecto para cargar las tablas del modelo a la instancia postgreSQL
 
 ## 🛠️ Instalación
 
