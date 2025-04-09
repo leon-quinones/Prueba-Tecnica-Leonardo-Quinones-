@@ -1,10 +1,10 @@
 <template>
-    <div class="bet-form">
+    <div class="container">
       <h2>Ingresa la cantidad que quieres apostar</h2>
   
       <!-- Campo para ingresar la cantidad de dinero -->
-      <div class:bet-options>
-        <label for="amount">Cantidad de Apuesta:</label>
+      <div style="margin: 1vh;">
+        <label for="amount" style="font-size: 2vh; margin-inline: 2vh;">Cantidad de Apuesta:</label>
         <input
           width="100%"
           type="number"
@@ -14,9 +14,10 @@
           :min="1"
           placeholder="Ingresa la cantidad"
           @input="validateAmount"
+          style="font-size: 2vh;"
         />
-        <p v-if="amount <= 1" class="error-message">La cantidad mínima es 1.</p>
-        <p v-if="amount >= balance" class="error-message">La cantidad máxima es {{ balance }}.</p>
+        <p v-if="amount <= 1" class="error-text alert alert-danger error-message">La cantidad mínima es 1.</p>
+        <p v-if="amount >= balance" class="error-text alert alert-danger error-message">La cantidad máxima es {{ balance }}.</p>
       </div>
       <div>
         
@@ -41,7 +42,7 @@
       };
     },
     computed: {
-        ...mapState(['player', 'wagerAmount', 'playerAccountBalance', 'wagerBetType']),
+        ...mapState(['player', 'wagerAmount', 'playerAccountBalance', 'wagerBetType',]),
         ...mapGetters(['getUsername', 'getWagerAmount', 'getPlayerBalance', 'getWagerBetType']),
 
       isValid() {        
@@ -75,6 +76,39 @@
     }
   };
   </script>
+  <style scoped>
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5vh;
   
+  }
+  
+  .field-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;  
+    margin: 2vh;
+  
+  }
+  
+  .field {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .error-message {
+  display: flex;
+  align-items: center;
+  font-size: 1.2vh; 
+  height: 2vh;
+}
+  </style>
 
   
