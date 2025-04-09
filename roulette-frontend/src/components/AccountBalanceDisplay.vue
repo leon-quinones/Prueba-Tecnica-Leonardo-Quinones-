@@ -1,14 +1,23 @@
 <template>
   <div class="container">
     <div class="field-container">
-      <h2>Saldo total:</h2>
-      <h2>{{ this.getPlayerBalance }}</h2>
+      <h2 class="badge text-bg-primary" style="font-size: 2vh;"
+      >Saldo total:
+      </h2>
+      <h2 class="">
+        {{ this.getPlayerBalance }}
+      </h2>
     </div>
     <div class="field-container">
-      <h2>Ganancias del día:</h2>
+      <h2 class="badge text-bg-secondary" style="font-size: 2vh;"
+      >Balance partida:</h2>
       <h2>{{ this.getPlayerTotalWinnings }}</h2>
     </div>
-    <button class="submit-button" @click="saveCredits">Guardar partida</button>
+    <div >
+        <button class="btn btn-danger " @click="saveCredits"
+        style="height: 10vh; width: 10vh;font-size: 2vh; text-align: center;"
+        >Guardar partida</button>
+    </div>  
   </div>
 </template>
 
@@ -18,13 +27,13 @@ import { mapState, mapGetters } from 'vuex'
 export default {
 
   computed: {
-    ...mapState(['player', 'sessionCredits', 'playerAccountBalance', 'playerTotalWinnings', 'playedGames']),
-    ...mapGetters(['getUsername','getSessionCredits', 'getPlayerBalance','getPlayerTotalWinnings', 'getPlayedGames'])
+    ...mapState(['player', 'sessionCredits', 'playerAccountBalance', 'playerTotalWinnings', 'playedGames', 'appDomain']),
+    ...mapGetters(['getUsername','getSessionCredits', 'getPlayerBalance','getPlayerTotalWinnings', 'getPlayedGames', 'getAppBaseUrl'])
     }, 
   methods: {
     ...mapMutations(['setSessionCredits']),
     async saveCredits() {
-      await fetch(`https://localhost:7004/api/v1.0/Players/${this.getUsername}`,
+      await fetch(`${this.getAppBaseUrl}/Players/${this.getUsername}`,
         {
           method: 'GET',
           headers: {
@@ -53,7 +62,7 @@ export default {
     },
     async updateGames() {
 
-      await fetch(`https://localhost:7004/api/v1.0/Wagers`,
+      await fetch(`${this.getAppBaseUrl}/Wagers`,
         {
           method: 'PATCH',
           body: JSON.stringify({
@@ -83,7 +92,7 @@ export default {
       });      
     },
     async addSessionCredits() {
-      await fetch(`https://localhost:7004/api/v1.0/Players/${this.getUsername}`,
+      await fetch(`${this.getAppBaseUrl}/Players/${this.getUsername}`,
         {
           method: 'POST',
           body: JSON.stringify({
@@ -120,15 +129,19 @@ export default {
 <style scoped>
 .container {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 15px;
+  justify-content: center;
+  margin: 0.5vh;
+
 }
 
 .field-container {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  align-items: center;
+  justify-content: center;  
+  margin: 2vh;
+
 }
 
 .field {

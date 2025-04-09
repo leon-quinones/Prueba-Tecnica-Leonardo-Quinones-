@@ -20,18 +20,28 @@
       </div>
   
 
-    <div class="options-row-2">
-        <div class="option green" @click="selectRange('evens')">Par</div>
-        <div class="option green" @click="selectRange('odds')">Impar</div>
+    <div class=" container options-row-2">
+        <div class="btn btn-warning" @click="selectRange('evens')"
+        style="width: 100%;"
+        >Par</div>
+        <div class="btn btn-secondary" @click="selectRange('odds')"
+        style="width: 100%;"
+        >Impar</div>
         <div v-if="showOddsColorOptions" class="color-options-row">
-           <p>Selecciona un color: {{ this.getWagerColor ? this.getWagerColor : 'Ninguno' }}</p>
+           <p class="badge text-bg-light"
+           style="display: flex; align-items: center; font-size: 1.4vh;"
+           >Selecciona un color: {{ this.getWagerColor ? this.getWagerColor : 'Ninguno' }}</p>
           <div class="option red" @click="selectColor('Red')" >Rojo</div>
           <div class="option black" @click="selectColor('Black')">Negro</div>
         </div>
         <div class="options-row-2">
-            <div class="option green" @click="selectOnlyColor">Color</div>
+            <div class="btn btn-success" @click="selectOnlyColor"
+            style="width: 100%;"
+            >Color</div>
             <div v-if="showOnlyColorOptions" class="color-options-row">
-            <p>Selecciona un color: {{ this.getWagerColor ? this.getWagerColor : 'Ninguno' }}</p>
+            <p class="badge text-bg-light" 
+            style="display: flex; align-items: center; font-size: 1.4vh;"
+            >Selecciona un color: {{ this.getWagerColor ? this.getWagerColor : 'Ninguno' }}</p>
             <div class="option red" @click="selectColor('Red')" >Rojo</div>
             <div class="option black" @click="selectColor('Black')">Negro</div>
         </div>            
@@ -41,14 +51,18 @@
     
 
   
-      <div v-if="selectedNumber !== null" class="selected-info">
-        <p v-if="selectedNumber >= 0">Has seleccionado el número: {{ this.getWagerNumber }} y color: {{ this.getWagerColor }}</p>
-        <p v-if="selectedNumber === -1">Has seleccionado apuesta con: {{ this.getWagerBetType }} y color: {{ this.getWagerColor }}</p>
+      <div v-if="selectedNumber !== null" class="container">
+        <p v-if="selectedNumber>= 0"          
+          >Has seleccionado el número: {{ this.getWagerNumber }} y color: {{ this.getWagerColor }}</p>
+        <p v-if="selectedNumber === -1"
+          
+        >Has seleccionado apuesta con: {{ this.getWagerBetType }} y color: {{ this.getWagerColor }}</p>
       </div>
-      <div v-if="getWagerBetType" class="selected-info">
-        <p>Con esta apuesta podrás ganar {{ betTypes[this.getWagerBetType] }} el valor apostado</p>        
-      </div>
-      
+      <div v-if="getWagerBetType" class="container selected-info badge rounded-pill text-bg-primary" 
+      style="display: flex; justify-content: center; align-items: center;"
+      >
+        <p>✨✨✨ Con esta apuesta podrás ganar {{ betTypes[this.getWagerBetType] }} el valor apostado ✨✨✨</p>        
+      </div>      
     </div>
   </template>
   
@@ -61,12 +75,11 @@
     },
     data() {
       return {
-        // Números de la ruleta de 0 a 36
         numbers: Array.from({ length: 37 }, (_, i) => i),
-        selectedNumber: null, // Número seleccionado por el usuario
-        selectedRange: null, // Rango seleccionado por el usuario (par, impar)
-        selectedColor: null, // Color seleccionado por el usuario
-        betType: null, // Tipo de apuesta (ParesColor, ImparesColor)
+        selectedNumber: null, 
+        selectedRange: null, 
+        selectedColor: null, 
+        betType: null, 
         betTypes: {
             'WagerOddsColor': '1x',
             'WagerEvensColor': '1x',
@@ -98,7 +111,6 @@
         this.hideColorOptions();
       },
   
-      // Método para seleccionar un rango (Par o Impar)
       selectRange(range) {
         this.setWagerNumber(-1);
         this.selectedRange = range;
@@ -112,12 +124,10 @@
         }
       },
   
-      // Método para seleccionar un color (Rojo o Negro)
       selectColor(color) {
         this.setWagerNumber(-1);
         this.setWagerColor(color);
         this.hideColorOptions()
-        // Cuando se selecciona un color, finalizamos la apuesta
 
       },
 
@@ -128,19 +138,16 @@
         this.showOnlyColorOptions = true;        
       },
   
-      // Función para determinar si el número es rojo
       isRed(number) {
         const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
         return redNumbers.includes(number);
       },
   
-      // Función para determinar si el número es negro
       isBlack(number) {
         const blackNumbers = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
         return blackNumbers.includes(number);
       },
   
-      // Función para alternar la visibilidad de las opciones de color
       toggleColorOptions() {
         this.showColorOptions = !this.showColorOptions;
       }
@@ -149,9 +156,17 @@
   </script>
   
   <style scoped>
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 1vh;
+  
+  }  
   .roulette-container {
     text-align: center;
-    margin: 20px;
+    
   }
   
   .roulette-table {
@@ -210,7 +225,10 @@
     color: white;
   }
   .options-row-2 {
-    width: 100%; /* Ocupa el 100% de la fila */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%; 
     }
 
   .options-row {
@@ -224,6 +242,7 @@
   .color-options-row {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 10px;
     margin-top: 10px;
   }

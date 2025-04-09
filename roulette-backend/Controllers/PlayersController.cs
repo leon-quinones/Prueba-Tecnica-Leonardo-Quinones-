@@ -43,12 +43,8 @@ namespace Roulette.App.Controllers
                     .Where(wager => wager.Username == id && wager.IncludedInBalance == true)
                     .SumAsync(wager => wager.Winnings);
                 if (userWinnings == null) { userWinnings = 0m; }
-                var token = new PlayerSession
-                {
-                    Token = Guid.NewGuid().ToString(),
-                    Username = user.Username,
-                };
-
+                var token = _sessionContext.GenerateSessionToken(user.Username);
+                if (token == null) { return StatusCode(503, "Service Unavailable"); }
                 if (await _sessionContext.CreateSession(token) != true) { return StatusCode(503, "Service Unavailable"); }
                 return Ok(new
                 {
@@ -74,11 +70,8 @@ namespace Roulette.App.Controllers
                 user.Balance = user.Balance + account.Balance;
                 user.Wagers = new List<Wager>();               
                 await _databaseContext.SaveChangesAsync();
-                var token = new PlayerSession
-                {
-                    Token = Guid.NewGuid().ToString(),
-                    Username = user.Username,
-                };
+                var token = _sessionContext.GenerateSessionToken(user.Username);
+                if (token == null) { return StatusCode(503, "Service Unavailable"); }
                 if (await _sessionContext.CreateSession(token) != true) { return StatusCode(503, "Service Unavailable"); }
                 return Created("token", new { Token = token.Token });
 
@@ -96,11 +89,9 @@ namespace Roulette.App.Controllers
             {
                 var username = Regex.Replace(account.Username, "[A-Za-z]", m => m.Value.ToLower());               
                 var user = await _databaseContext.Players.FirstOrDefaultAsync(user => user.Username == username);
-                var token = new PlayerSession
-                {
-                    Token = Guid.NewGuid().ToString(),
-                    Username = username,
-                };
+                var tokenValue = Guid.NewGuid().ToString();
+                var token = _sessionContext.GenerateSessionToken(username);
+                if (token == null) { return StatusCode(503, "Service Unavailable"); }
                 if (await _sessionContext.CreateSession(token) != true) { return StatusCode(503, "Service Unavailable"); }
                 if (user != null) { 
                     return Conflict(new

@@ -8,6 +8,7 @@ namespace Roulette.App.Model.Database
         public DbSet<Wager> Wagers { get; set; }
         public DbSet<PlayerAccount> Players { get; set; }
         public DbSet<Result> GameResults { get; set; }
+        public DbSet<PlayerSession> ActiveSessions { get; set; }
 
         public RouletteDbContext(DbContextOptions<RouletteDbContext> options)
             : base(options)
@@ -32,6 +33,9 @@ namespace Roulette.App.Model.Database
 
             modelBuilder.Entity<Result>()
                 .HasKey(r => r.Id);
+
+            modelBuilder.Entity<PlayerSession>()
+                .HasKey(s => s.Id);
 
             modelBuilder.Entity<Game>()                
                 .HasMany(g => g.Wagers)

@@ -3,36 +3,42 @@
 <template>
     <div>
       <div v-if="showForm">
-        <div>
-          <label for="username">Username:</label>
+        <div class="container">
+            <label for="username" class="badge text-bg-success" style="font-size: 1.7vh; margin: 1vh">Username:</label>
           <input
             v-model="username"
             type="text"
             id="username"
             @blur="validateUsername"
             :class="{'invalid': usernameError}"
+            style="font-size: 1.7vh; margin: 1vh"
           />
-          <p v-if="usernameError" class="error-text">Username es requerido</p>
+          <p v-if="usernameError" class="error-text alert alert-danger error-message">Username es requerido</p>
         </div>
   
         <div>
-          <label for="amount">Cantidad a Apostar:</label>
+          <label for="amount" class="badge text-bg-success" style="font-size: 1.7vh; margin: 1vh">Cantidad a Apostar:</label>
           <input
             v-model="amount"
             type="number"
             id="amount"
             @blur="validateAmount"
             :class="{'invalid': amountError}"
+            style="font-size: 1.7vh; margin: 1vh"
           />
-          <p v-if="amountError" class="error-text">Cantidad debe ser mayor que 0</p>
+          <p v-if="amountError" class="error-text alert alert-danger error-message" >Cantidad debe ser mayor que 0</p>
         </div>
-        <button 
+        <div style="display: flex; align-items: center; justify-content: center; margin: 2vh;">
+          <button 
           :disabled="usernameError || amountError || !username || !amount"
           @click="submitBet"
+          class="btn btn-danger"
+          style=""
         >
           Enviar Apuesta
         </button>
-      </div>
+        </div style="margin: 3vh" v-if="isUserFound">
+        </div>
     </div>
   </template>
 
@@ -40,7 +46,8 @@
 import { mapState, mapMutations, mapGetters } from 'vuex'
 export default {
   computed: {
-    ...mapState(['player', 'credits']),
+    ...mapState(['player', 'credits', 'appDomain']),
+    ...mapGetters(['getAppBaseUrl'])   
   },  
   data() {
     return {
@@ -49,7 +56,8 @@ export default {
       amount: '',
       usernameError: false,
       amountError: false,
-      playerBalance: 0
+      playerBalance: 0,
+      isUserFound: false
     };
   },
   mounted() {this.displayForm()},
@@ -71,7 +79,7 @@ export default {
       if (this.username && this.amount > 0) {
          this.username = this.$ToLowerUsername(this.username);
          await fetch(
-          'https://localhost:7004/api/v1.0/Players/SignUp',
+          `${this.getAppBaseUrl}/Players/SignUp`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -116,75 +124,15 @@ export default {
 
 
 <style scoped>
-.invalid {
-  border: 1px solid red;
-}
-.error-text {
-  color: red;
-  font-size: 12px;
-}
-</style>
-
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+container{
+  display: flex
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.error-message {
+  display: flex;
+  align-items: center;
+  font-size: 1.2vh; 
+  height: 2vh;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
 </style>

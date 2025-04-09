@@ -3,9 +3,9 @@ import PlayRoulette from '../components/PlayRoulette.vue'
 </script>
 
 <template>
-  <main>
+  <main >
     <div>
-      <PlayRoulette/>
+      <PlayRoulette />
     </div>
   </main>
 </template>

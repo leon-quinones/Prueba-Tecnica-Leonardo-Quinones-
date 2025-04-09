@@ -37,11 +37,8 @@ namespace Roulette.App.Controllers
                 if (player != AuthenticatedUser) { return Forbid(); }
                 var game = _databaseContext.Wagers.FirstOrDefault(wager => wager.GameId == gameId && wager.Username == player);
                 if (game == null) { return NotFound(); }
-                var token = new PlayerSession
-                {
-                    Token = Guid.NewGuid().ToString(),
-                    Username = player,
-                };
+                var token = _sessionContext.GenerateSessionToken(player);
+                if (token == null) { return StatusCode(503, "Service Unavailable"); }
                 if (await _sessionContext.CreateSession(token) != true) { return StatusCode(503, "Service Unavailable"); }
                 return Ok(new
                 {                 
@@ -96,11 +93,8 @@ namespace Roulette.App.Controllers
                 _databaseContext.Wagers.Add(playerWager);
                 await _databaseContext.SaveChangesAsync();
                 if (areWinningsUpdate != true) { return StatusCode(503, "Service Unvailable"); }
-                var token = new PlayerSession
-                {
-                    Token = Guid.NewGuid().ToString(),
-                    Username = gameData.Username,
-                };
+                var token = _sessionContext.GenerateSessionToken(gameData.Username);
+                if (token == null) { return StatusCode(503, "Service Unavailable"); }
                 if (await _sessionContext.CreateSession(token) != true) { return StatusCode(503, "Service Unavailable"); }
                 return Created("", new { 
                     Token = token.Token,

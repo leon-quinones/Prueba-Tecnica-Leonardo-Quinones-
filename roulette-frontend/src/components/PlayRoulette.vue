@@ -1,49 +1,55 @@
 
-<template>
-  <div v-if="!isUpdatedBalance">
+<template >
+  <div v-if="!isUpdatedBalance" class="alert alert-info" role="alert" 
+  style="display: flex; align-items: center; justify-content: center;">
     <p> Conectando con una sala de juegos disponible </p> 
   </div>
-  <div v-if="isUpdatedBalance">
+  <div v-if="isUpdatedBalance" 
+  style="display: flex; justify-content: center; flex-direction: column;">
     <div>
       <AccountBalanceDisplay/>
     </div>
     <div>
-      <p>My Game</p>
       <BetForm :playerBalance="playerBalance" v-if="isUpdatedBalance"/>
     </div>
-    <div >
+    <div>
       <RouletteTable/>      
-      <p>{{validateWager()}}</p>
     </div>
-    <div v-if="validateWager()">
-      <h2>Esta es tu apuesta!:</h2>
-      <h3>Monto a apostar: {{ this.getWagerAmount }}</h3>
-      <div v-if="this.getWagerBetType === 'WagerFull'">
-        <h3>Número: {{ this.getWagerNumber}}</h3>
-        <h3>Color: {{ this.options[this.getWagerColor]}}</h3>  
-      </div>
-      <div v-if="['WagerOddsColor', 'WagerEvensColor'].includes(this.getWagerBetType) ">
-        <h3>Número: {{ this.options[this.getWagerBetType] }} de color {{this.options[this.getWagerColor]}}</h3>        
-      </div>      
-      <div v-if="this.getWagerBetType === 'WagerOnlyColor'">
-        <h3>Número: Cualquier número de color {{this.options[this.getWagerColor]}}</h3>        
-      </div>
+    <div v-if="validateWager() && !this.isGameEnded" class="alert-dark" role="alert" style="height: 12vh;">
       <div>
-        <button @click="startGame">Jugar!</button>
-      </div>
+          <p>Esta es tu apuesta!:</p>
+        <p>Monto a apostar: {{ this.getWagerAmount }} EUR</p>
+        <div v-if="this.getWagerBetType === 'WagerFull'">
+          <p>Número: {{ this.getWagerNumber}} - Color: {{ this.options[this.getWagerColor]}}</p>
+
+        </div>
+        <div v-if="['WagerOddsColor', 'WagerEvensColor'].includes(this.getWagerBetType) ">
+          <p>Número: {{ this.options[this.getWagerBetType] }} de color {{this.options[this.getWagerColor]}}</p>        
+        </div>      
+        <div v-if="this.getWagerBetType === 'WagerOnlyColor'">
+          <p>Número: Cualquier número de color {{this.options[this.getWagerColor]}}</p>        
+        </div>
+      </div>       
     </div>
-    <div v-if="!gotWinnings && isGameEnded">
+    <div>
+          <button @click="startGame" class="btn btn-danger" v-if="validateWager() && !this.isGameEnded"
+          style="width: 100%;"
+          >Jugar!</button>
+    </div>   
+    
+    <div v-if="!gotWinnings && isGameEnded" >
       <h4>La ruleta aún esta rodando...</h4>
     </div>
 
-    <div v-if="gotWinnings && isGameEnded">
+    <div v-if="gotWinnings && isGameEnded" class="alert-dark" role="alert" style="height: 12vh;">
       <div>
-      <h1>Resultado: {{this.winnerNumber }} {{this.options[this.winnerColor]}}</h1>
+      <p>Resultado: {{this.winnerNumber }} {{this.options[this.winnerColor]}}</p>
     </div>      
-      <h2 v-if="winnings[winnings.length-1] > 0"> Felicidades has ganado {{winnings[winnings.length-1]}} Euros!</h2>
-      <h2 v-if="winnings[winnings.length-1] < 0"> No has ganado. Vuelve a intentarlo!. Perdiste {{ Math.abs(winnings[winnings.length-1]) }} Euros</h2>
+      <p v-if="winnings[winnings.length-1] > 0"> ✨🏆🎉Felicidades has ganado!🎉🏆✨ {{winnings[winnings.length-1]}} Euros!</p>
+      <p v-if="winnings[winnings.length-1] < 0"> No has ganado 💔. Vuelve a intentarlo! 💪. Perdiste {{ Math.abs(winnings[winnings.length-1]) }} Euros</p>
       <div>
-        <button @click="newGame">¿Quieres volver a jugar?</button>
+        <button @click="newGame" class="btn btn-success" style="width: 100%;"
+        >¿Quieres volver a jugar? 🤞</button>
       </div>
     </div>
   </div>
@@ -58,10 +64,10 @@
   export default {
     computed: {
     ...mapState(['player', 'sessionCredits', 'wagerBetType', 'wagerNumber', 'wagerColor', 'playerWinnings', 'playerAccountBalance'
-      ,'playedGames'
+      ,'playedGames', 'appDomain', 'playerTotalWinnings'
     ]),
     ...mapGetters(['getUsername', 'getSessionCredits', 'getWagerBetType', 'getWagerAmount', 'getWagerNumber', 'getWagerColor', 'getPlayerBalance'
-      ,'getPlayedGames'
+      ,'getPlayedGames', 'getAppBaseUrl'
     ])
     },  
     components: {
@@ -93,11 +99,11 @@
     methods: {
       ...mapMutations(['setUsername', 'setSessionCredits', 'setWagerBetType', 
         'setWagerAmount', 'setWagerNumber', 'setWagerColor', 'setPlayerWinnings', 'setPlayerBalance',
-        'setPlayedGames'
+        'setPlayedGames', 'setPlayerTotalWinnings'
       ]),
 
       async loadUserData() {
-        await fetch(`https://localhost:7004/api/v1.0/Players/${this.getUsername}`,
+        await fetch(`${this.getAppBaseUrl}/Players/${this.getUsername}`,
             {
               method: 'GET',
               headers: {
@@ -132,7 +138,7 @@
         
       },
       async startGame() {        
-        await fetch('https://localhost:7004/api/v1.0/Games',
+        await fetch(`${this.getAppBaseUrl}/Games`,
           {
             method: "POST",
             body: JSON.stringify({
@@ -180,7 +186,7 @@
           player: this.getUsername
         }).toString();
         await fetch( 
-          `https://localhost:7004/api/v1.0/Games/${this.playedGames[this.playedGames.length-1]}/Wagers?${params}`  
+          `${this.getAppBaseUrl}/Games/${this.playedGames[this.playedGames.length-1]}/Wagers?${params}`  
         ,
           {
             method: "GET",    
@@ -204,8 +210,9 @@
         .then((body)=> {
           this.$SaveToken(this.getUsername, body.token);
           this.winnings.push(Number(body.winnings));
-          this.playerBalance += this.winnings[this.winnings.length-1];
-          this.setPlayerWinnings(this.totalWinnings());
+          this.setPlayerWinnings(Number(body.winnings));          
+          this.playerBalance += this.winnings[this.winnings.length-1];          
+          this.setPlayerTotalWinnings(this.totalWinnings());
           this.setPlayerBalance(this.playerBalance);
           this.gotWinnings = true;
           return;
@@ -227,15 +234,17 @@
   </script>
   
   <style scoped>
-  .juego {
-    padding: 20px;
-    text-align: center;
-  }
+
+  .container-1 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1vh;
+    
+    }    
+
   
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-  }
+
   </style>
   

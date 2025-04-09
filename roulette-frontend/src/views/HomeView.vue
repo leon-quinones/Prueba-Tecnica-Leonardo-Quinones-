@@ -1,6 +1,6 @@
-<template>
+<template >
     <div>
-      <button v-if="showButton" @click="Login">Iniciar Apuesta</button>
+      <button v-if="showButton" @click="Login" class="btn btn-danger">Iniciar Apuesta</button>
     </div>    
 </template>
 
